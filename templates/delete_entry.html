@@ -1,0 +1,18 @@
+<title>Delete Entry - Masters Database</title>
+<h2>Delete Entry</h2>
+
+{% from "_formhelpers.html" import render_field %}
+<form method="post">
+
+        {{ render_field(form.entry_email) }}
+        {{ render_field(form.golfer_1) }}
+        {{ render_field(form.golfer_2) }}
+        {{ render_field(form.golfer_3) }}
+        {{ render_field(form.golfer_4) }}
+        {{ render_field(form.tie_breaker) }}
+
+<h5> Are you sure you would like to delete the entry?</h5>
+
+    <p><input type="submit" value="Delete">
+</p></form>
+</doctype>

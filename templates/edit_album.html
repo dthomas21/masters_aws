@@ -1,0 +1,17 @@
+<doctype html="">
+<title>Edit Entry - Masters Database</title>
+<h2>Edit Entry</h2>
+
+{% from "_formhelpers.html" import render_field %}
+<form method="post">
+    <dl>
+        {{ render_field(form.entry_email) }}
+        {{ render_field(form.golfer_1) }}
+        {{ render_field(form.golfer_2) }}
+        {{ render_field(form.golfer_3) }}
+        {{ render_field(form.golfer_4) }}
+        {{ render_field(form.tie_breaker) }}
+    </dl>
+    <p><input type="submit" value="Submit">
+</p></form>
+</doctype>
