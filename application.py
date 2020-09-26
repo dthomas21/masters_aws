@@ -1,11 +1,11 @@
 from flask import Flask, flash, render_template, request, redirect, session, url_for
-from applications.models import Entry, Golfer
-from applications.forms import UserSearchForm, EntryForm
-from applications import db
+from application.models import Entry, Golfer
+from application.forms import UserSearchForm, EntryForm
+from application import db
 from config import USERNAME, PASSWORD
 # from db_setup import init_db, db
 
-from applications.tables import Results
+from application.tables import Results
 from sqlalchemy import or_
 
 app = Flask(__name__)
@@ -155,5 +155,7 @@ def save_changes(entry, form, new=False):
 #     commit to database
     db.commit()
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
+

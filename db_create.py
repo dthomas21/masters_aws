@@ -1,5 +1,5 @@
-from applications import db
-from applications.models import Entry, Golfer
+from application import db
+from application.models import Entry, Golfer
 
 db.create_all()
 
