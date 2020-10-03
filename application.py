@@ -150,9 +150,10 @@ def save_changes(entry, form, new=False):
     if new:
 #        add new entry to database
         db.session.add(entry)
+        db.session.commit()
 
 #     commit to database
-    db.session.commit()
+#     db.session.commit()
 
 
 if __name__ == '__main__':
