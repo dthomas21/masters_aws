@@ -7,13 +7,13 @@ from config import USERNAME, PASSWORD
 from application.tables import Results
 from sqlalchemy import or_
 
-app = Flask(__name__)
-app.debug=True
+application = Flask(__name__)
+application.debug=True
 # change this to your own value
-app.secret_key = 'noclue'
+application.secret_key = 'noclue'
 
 
-@app.route('/', methods=['GET', 'POST'])
+@application.route('/', methods=['GET', 'POST'])
 def index():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -23,7 +23,7 @@ def index():
 
     return render_template('index.html', form=search)
 
-@app.route('/login', methods=['GET', 'POST'])
+@application.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         if request.form['username'] != USERNAME:
@@ -37,14 +37,14 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/logout')
+@application.route('/logout')
 def logout():
     session.pop('logged_in', None)
     flash('Logged Out')
     return redirect(url_for('index'))
 
 
-@app.route('/results')
+@application.route('/results')
 def search_results(search):
     results = []
     search_string = search.data['search']
@@ -76,7 +76,7 @@ def search_results(search):
         return render_template('results.html', table=table)
 
 
-@app.route('/new_entry', methods=['GET', 'POST'])
+@application.route('/new_entry', methods=['GET', 'POST'])
 def new_entry():
     """
     add new entry
@@ -93,7 +93,7 @@ def new_entry():
     return render_template('new_entry.html', form=form)
 
 # editing:
-@app.route('/item/<int:id>', methods=['GET', 'POST'])
+@application.route('/item/<int:id>', methods=['GET', 'POST'])
 def edit(id):
     qry = db.query(Entry).filter(Entry.id==id)
     entry = qry.first()
@@ -110,7 +110,7 @@ def edit(id):
         return f"Error loading {id}"
 
 # deleting:
-@app.route('/delete/<int:id>', methods=['GET', 'POST'])
+@application.route('/delete/<int:id>', methods=['GET', 'POST'])
 def delete(id):
     """
     Delete entry in database matching the specified id in the URL
@@ -156,4 +156,4 @@ def save_changes(entry, form, new=False):
 
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
