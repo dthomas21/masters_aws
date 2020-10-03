@@ -149,8 +149,12 @@ def save_changes(entry, form, new=False):
 
     if new:
 #        add new entry to database
-        db.session.add(entry)
-        db.session.commit()
+        try:
+            db.session.add(entry)
+            db.session.commit()
+            db.session.close()
+        except:
+            db.session.rollback()
 
 #     commit to database
 #     db.session.commit()
