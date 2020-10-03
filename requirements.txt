@@ -1,6 +1,5 @@
 Click==7.0
 Flask==1.0.2
-Flask-APScheduler==1.11.0
 Flask-Babel==1.0.0
 Flask-Bootstrap==3.3.7.1
 Flask-Bootstrap4==4.0.2

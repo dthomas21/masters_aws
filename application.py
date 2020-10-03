@@ -4,7 +4,6 @@ from application.forms import UserSearchForm, EntryForm
 from application import db
 from config import USERNAME, PASSWORD
 # from db_setup import init_db, db
-
 from application.tables import Results
 from sqlalchemy import or_
 
