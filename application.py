@@ -8,7 +8,7 @@ from application.tables import Results
 from sqlalchemy import or_
 
 application = Flask(__name__)
-application.debug=True
+application.debug = True
 # change this to your own value
 application.secret_key = 'noclue'
 
@@ -51,19 +51,19 @@ def search_results(search):
 
     if search_string:
         if search.data['select'] == 'Email':
-            qry = db.query(Entry, Golfer).filter(
+            qry = db.session.query(Entry, Golfer).filter(
                 Golfer.id==Entry.entry_email_id).filter(
                 Golfer.name.contains(search_string))
             results = [item[0] for item in qry.all()]
         elif search.data['select'] == 'golfer_1':
-            qry = db.query(Entry).filter(or_(
+            qry = db.session.query(Entry).filter(or_(
                 Entry.golfer_1.contains(search_string), Entry.golfer_2.contains(search_string),
                 Entry.golfer_3.contains(search_string), Entry.golfer_4.contains(search_string)
             ))
             results = qry.all()
 
     else:
-        qry = db.query(Entry)
+        qry = db.session.query(Entry)
         results = qry.all()
 
     if not results:
@@ -95,7 +95,7 @@ def new_entry():
 # editing:
 @application.route('/item/<int:id>', methods=['GET', 'POST'])
 def edit(id):
-    qry = db.query(Entry).filter(Entry.id==id)
+    qry = db.session.query(Entry).filter(Entry.id==id)
     entry = qry.first()
 
     if entry:
@@ -115,7 +115,7 @@ def delete(id):
     """
     Delete entry in database matching the specified id in the URL
     """
-    qry = db.query(Entry).filter(
+    qry = db.session.query(Entry).filter(
         Entry.id==id
     )
     entry = qry.first()
@@ -124,8 +124,8 @@ def delete(id):
         form = EntryForm(formdata=request.form, obj=entry)
         if request.method == 'POST' and form.validate():
 #             delete from database
-            db.delete(entry)
-            db.commit()
+            db.session.delete(entry)
+            db.session.commit()
             flash('Entry successfully deleted')
             return redirect('/')
         return render_template('delete_entry.html', form=form)
@@ -149,10 +149,10 @@ def save_changes(entry, form, new=False):
 
     if new:
 #        add new entry to database
-        db.add(entry)
+        db.session.add(entry)
 
 #     commit to database
-    db.commit()
+    db.session.commit()
 
 
 if __name__ == '__main__':
