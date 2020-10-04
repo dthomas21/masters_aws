@@ -7,8 +7,12 @@ from config import USERNAME, PASSWORD
 from application.tables import Results
 from sqlalchemy import or_
 
+
+
 application = Flask(__name__)
 application.debug = True
+db.init_app(application)
+# application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # change this to your own value
 application.secret_key = 'noclue'
 
@@ -137,8 +141,8 @@ def save_changes(entry, form, new=False):
     Save the changes to the database
     """
 #     Get data from form and assign it to the correct attributes of the SQLAlchemy table object
-    entry_email = Golfer()
-    entry_email.name = form.entry_email.data
+    entry_email = Golfer(name=form.entry_email.data)
+    # entry_email.name = form.entry_email.data
 
     entry.entry_email = entry_email
     entry.golfer_1 = form.golfer_1.data

@@ -4,13 +4,13 @@ from application import db
 class Golfer(db.Model):
     __tablename__ = "golfers"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128))
+    name = db.Column(db.String(128))#, index=True, unique=False)
 
-    def __init__(self, notes):
-        self.notes = notes
+    # def __init__(self, name):
+    #     self.name = name
 
     def __repr__(self):
-        return self.notes
+        return self.name
 
 
 class Entry(db.Model):
@@ -26,5 +26,6 @@ class Entry(db.Model):
     entry_email_id = db.Column(db.Integer, db.ForeignKey("golfers.id"))
     entry_email = db.relationship("Golfer", backref=db.backref(
         "entries", order_by=id), lazy=True)
+
 
 # </artist:>

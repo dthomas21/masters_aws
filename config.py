@@ -2,7 +2,7 @@
 # The other elements are the same as used in the tutorial
 # format: (user):(password)@(db_identifier).amazonaws.com:3306/(db_name)
 
-
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:masters123@masters-grant.ccegwawiyjmw.us-west-2.rds.amazonaws.com:3306/mastersoctober'
 
 # Uncomment the line below if you want to work with a local DB
