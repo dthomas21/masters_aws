@@ -2,19 +2,13 @@ from flask import Flask, flash, render_template, request, redirect, session, url
 from application.models import Entry, Golfer
 from application.forms import UserSearchForm, EntryForm
 from application import db
+from application import application
 from config import USERNAME, PASSWORD
 # from db_setup import init_db, db
 from application.tables import Results
 from sqlalchemy import or_
 
-
-
-application = Flask(__name__)
-application.debug = True
-db.init_app(application)
-# application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# change this to your own value
-application.secret_key = 'noclue'
+# from application.__init__ import application
 
 
 @application.route('/', methods=['GET', 'POST'])
@@ -165,4 +159,5 @@ def save_changes(entry, form, new=False):
 
 
 if __name__ == '__main__':
+    db.create_all()
     application.run()
