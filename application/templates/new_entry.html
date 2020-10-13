@@ -1,19 +1,51 @@
 {% extends "layout.html" %} {% block body %}
 <doctype html="">
-<title>New Entry - Flask Masters Database</title>
-<h2>New Entry</h2>
+<title>Team Entry - Flask Masters Database</title>
+    <br>
+<h2>Team Entry</h2>
 
 {% from "_formhelpers.html" import render_field %}
+
+
 <form method="post">
+                <span style="float:right;">
+            <h5>Important Reminders</h5>
+                Team Name(s) must be independent of each other. Entrants are allowed to submit up to three teams.<br/>
+                </br>
+            <h5>Cost and Payout</h5>
+                There is an entry fee of $30 per team. In terms of payout, the first-place entrant will take home 80 <br>
+                percent of the pot and second place entrant 20 percent.  First and second places will be determined by <br>
+                the top team aggregate money winner and the second-place team aggregate money winner. <br>
+                <br>
+                We will use Venmo: username Greg Ferraro (Greg-Ferraro-1), which has a Masters logo as the Venmo profile
+                <br>You may also send a check to:
+                <br>Greg Ferraro
+                <br>c/o The Ferraro Group
+                <br>165 W. Liberty Street, Suite 210
+                <br>Reno, NV 89501
+            <br> <br>
+            <h5>Tie Breaker</h5>
+                Please indicate the total number of strokes under par you think your team will finish with at the conclusion <br>
+                of the tournament. In the case of a tie between entrants, this number this selection will determine the <br>
+                winner of the pool.
+            </span>
+
     <dl>
         {{ render_field(form.entry_email) }}
+        {{ render_field(form.team_name) }}
         {{ render_field(form.golfer_1) }}
         {{ render_field(form.golfer_2) }}
         {{ render_field(form.golfer_3) }}
         {{ render_field(form.golfer_4) }}
         {{ render_field(form.tie_breaker) }}
+        <!--{{ render_field(form.has_paid) }}-->
     </dl>
+
     <p><input type="submit" value="Submit">
 </p></form>
+
+
+
+
 </doctype>
 {% endblock %}

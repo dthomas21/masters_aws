@@ -5,10 +5,8 @@ from application import db
 from application import application
 from config import USERNAME, PASSWORD
 # from db_setup import init_db, db
-from application.tables import Results
+from application.tables import Results, UserResults
 from sqlalchemy import or_
-
-# from application.__init__ import application
 
 
 @application.route('/', methods=['GET', 'POST'])
@@ -30,7 +28,7 @@ def login():
             flash('Password is different')
         else:
             session['logged_in'] = True
-            flash('Login successful')
+            # flash('Login successful')
             return redirect(url_for('index'))
     return render_template('login.html')
 
@@ -48,11 +46,22 @@ def search_results(search):
     search_string = search.data['search']
 
     if search_string:
-        if search.data['select'] == 'Email':
+        allow_edit = False
+        if search_string == 'admin' or search_string == 'masters':
+            qry = db.session.query(Entry)
+            results = qry.all()
+            allow_edit = True
+
+        elif search_string == 'masters2020':
+            qry = db.session.query(Entry)
+            results = qry.all()
+
+        elif search.data['select'] == 'Email':
             qry = db.session.query(Entry, Golfer).filter(
                 Golfer.id==Entry.entry_email_id).filter(
-                Golfer.name.contains(search_string))
+                Golfer.name==search_string)
             results = [item[0] for item in qry.all()]
+
         elif search.data['select'] == 'golfer_1':
             qry = db.session.query(Entry).filter(or_(
                 Entry.golfer_1.contains(search_string), Entry.golfer_2.contains(search_string),
@@ -60,18 +69,24 @@ def search_results(search):
             ))
             results = qry.all()
 
-    else:
-        qry = db.session.query(Entry)
-        results = qry.all()
+    # else:
+    #     flash('No results found')
+        # qry = db.session.query(Entry)
+        # results = qry.all()
 
     if not results:
-        flash('No results found!')
+        flash('No results found')
         return redirect('/')
     else:
         # display results
-        table = Results(results)
-        table.border = True
-        return render_template('results.html', table=table)
+        if allow_edit:
+            table = Results(results)
+            table.border = True
+            return render_template('results.html', table=table)
+        else:
+            table = UserResults(results)
+            table.border = True
+            return render_template('results.html', table=table)
 
 
 @application.route('/new_entry', methods=['GET', 'POST'])
@@ -84,9 +99,19 @@ def new_entry():
     #     save the entry
     if request.method == 'POST' and form.validate():
         entry = Entry()
-        save_changes(entry, form, new=True)
-        flash('Entry successfully submitted')
-        return redirect('/')
+        if request.form['entry_email'] == '':
+            flash('Entry Email not provided, entry was not submitted')
+        elif request.form['team_name'] == '':
+            flash('Team Name not provided, entry was not submitted')
+        elif request.form['tie_breaker'] ==  '':
+            flash('Tie Breaker not provided, entry was not submitted')
+        elif request.form['golfer_1'] == '--Select golfer--' or request.form['golfer_2'] == '--Select golfer--' or \
+                request.form['golfer_3'] == '--Select golfer--' or request.form['golfer_4'] == '--Select golfer--':
+            flash('One or more golfers have not been selected properly, entry was not submitted')
+        else:
+            save_changes(entry, form, new=True)
+            flash('Entry successfully submitted, good luck!')
+            return redirect('/')
 
     return render_template('new_entry.html', form=form)
 
@@ -102,6 +127,7 @@ def edit(id):
 #           save edits:
             save_changes(entry, form)
             flash('Entry successfully updated')
+            db.session.commit()
             return redirect('/')
         return render_template('edit_album.html', form=form)
     else:
@@ -139,11 +165,13 @@ def save_changes(entry, form, new=False):
     # entry_email.name = form.entry_email.data
 
     entry.entry_email = entry_email
+    entry.team_name = form.team_name.data
     entry.golfer_1 = form.golfer_1.data
     entry.golfer_2 = form.golfer_2.data
     entry.golfer_3 = form.golfer_3.data
     entry.golfer_4 = form.golfer_4.data
     entry.tie_breaker = form.tie_breaker.data
+    entry.has_paid = form.has_paid.data
 
     if new:
 #        add new entry to database
@@ -160,4 +188,4 @@ def save_changes(entry, form, new=False):
 
 if __name__ == '__main__':
     db.create_all()
-    application.run()
+    application.run(debug=True)

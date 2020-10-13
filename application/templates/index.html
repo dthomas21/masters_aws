@@ -1,32 +1,89 @@
 {% extends "layout.html" %} {% block body %}
-<doctype html="">
+<div html="">
 
     <title>Masters Database</title>
 
+<body>
+    <br>
+    <br>
+    <br>
 
-<h2>Masters Site</h2>
+        <img style="float: right;" alt="" src={{ url_for('static',filename='masters2.png') }} width=750 height=500>
 
-<p></p><p>
-<a href="{{ url_for('.new_entry') }}"> New Entry </a>
+    </img>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class="flashes">
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+
+<!--<h1>A tradition unlike any other...</h1>-->
+
+    <br>
+
+  <a href="{{ url_for('.new_entry') }}"
+     style="font-size:30px">
+    Create Tournament Entry
+  </a>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+
+<!--{% with messages = get_flashed_messages() %}-->
+  <!--{% if messages %}-->
+    <!--<ul class="flashes">-->
+    <!--{% for message in messages %}-->
+      <!--<li>{{ message }}</li>-->
+    <!--{% endfor %}-->
+    <!--</ul>-->
+  <!--{% endif %}-->
+<!--{% endwith %}-->
+
 
 {% from "_formhelpers.html" import render_field %}
+
 <form method="post">
   <dl>
     {{ render_field(form.select) }}
     <p>
     {{ render_field(form.search) }}
   </p></dl>
+    <br>
   <p><input type="submit" value="Search">
-</p></form>
+</p>
+
+</form>
+
+    <!--<img  alt="" src={{ url_for('static',filename='masters2.png') }}>-->
+    <!--</img>-->
+
+
+
+    <div id="footer">Website created by Darren and Grant Thomas
+    </div>
+
+
+
 </doctype>
+
+    <style>
+   #footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   color: gray;
+   text-align: center;
+}
+    <!--body {-->
+    <!--background-image: url(static/masters2.png);-->
+      <!--background-position: center;-->
+      <!--background-repeat: no-repeat;-->
+      <!--background-size: cover;-->
+<!--}-->
+    </style>
+
+</body>
+
 {% endblock %}

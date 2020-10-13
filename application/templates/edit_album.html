@@ -6,11 +6,13 @@
 <form method="post">
     <dl>
         {{ render_field(form.entry_email) }}
+        {{ render_field(form.team_name) }}
         {{ render_field(form.golfer_1) }}
         {{ render_field(form.golfer_2) }}
         {{ render_field(form.golfer_3) }}
         {{ render_field(form.golfer_4) }}
         {{ render_field(form.tie_breaker) }}
+        {{ render_field(form.has_paid) }}
     </dl>
     <p><input type="submit" value="Submit">
 </p></form>
