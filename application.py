@@ -23,9 +23,9 @@ def index():
 def login():
     if request.method == 'POST':
         if request.form['username'] != USERNAME:
-            flash('User name is different')
+            flash('League Name is different')
         elif request.form['password'] != PASSWORD:
-            flash('Password is different')
+            flash('Access Code is different')
         else:
             session['logged_in'] = True
             # flash('Login successful')
@@ -47,7 +47,7 @@ def search_results(search):
 
     if search_string:
         allow_edit = False
-        if search_string == 'admin' or search_string == 'masters':
+        if search_string == 'admin7':
             qry = db.session.query(Entry)
             results = qry.all()
             allow_edit = True
@@ -63,11 +63,11 @@ def search_results(search):
             results = [item[0] for item in qry.all()]
 
         elif search.data['select'] == 'golfer_1':
-            qry = db.session.query(Entry).filter(or_(
+            qry = db.session.query(Entry, Golfer).filter(or_(
                 Entry.golfer_1.contains(search_string), Entry.golfer_2.contains(search_string),
                 Entry.golfer_3.contains(search_string), Entry.golfer_4.contains(search_string)
             ))
-            results = qry.all()
+            results = [item[0] for item in qry.all()]
 
     # else:
     #     flash('No results found')
@@ -105,6 +105,8 @@ def new_entry():
             flash('Team Name not provided, entry was not submitted')
         elif request.form['tie_breaker'] ==  '':
             flash('Tie Breaker not provided, entry was not submitted')
+        elif request.form['entrant_full_name'] == '':
+            flash('Entrant full name not provide, entry was not submitted')
         elif request.form['golfer_1'] == '--Select golfer--' or request.form['golfer_2'] == '--Select golfer--' or \
                 request.form['golfer_3'] == '--Select golfer--' or request.form['golfer_4'] == '--Select golfer--':
             flash('One or more golfers have not been selected properly, entry was not submitted')
@@ -128,7 +130,12 @@ def edit(id):
             save_changes(entry, form)
             flash('Entry successfully updated')
             db.session.commit()
-            return redirect('/')
+            # return redirect('/')
+            qry = db.session.query(Entry)
+            results = qry.all()
+            table = Results(results)
+            table.border = True
+            return render_template('results.html', table=table)
         return render_template('edit_album.html', form=form)
     else:
         return f"Error loading {id}"
@@ -151,7 +158,12 @@ def delete(id):
             db.session.delete(entry)
             db.session.commit()
             flash('Entry successfully deleted')
-            return redirect('/')
+            # return redirect('/')
+            qry = db.session.query(Entry)
+            results = qry.all()
+            table = Results(results)
+            table.border = True
+            return render_template('results.html', table=table)
         return render_template('delete_entry.html', form=form)
     else:
         return f"Error deleting {id}"
@@ -165,6 +177,7 @@ def save_changes(entry, form, new=False):
     # entry_email.name = form.entry_email.data
 
     entry.entry_email = entry_email
+    entry.entrant_full_name = form.entrant_full_name.data
     entry.team_name = form.team_name.data
     entry.golfer_1 = form.golfer_1.data
     entry.golfer_2 = form.golfer_2.data

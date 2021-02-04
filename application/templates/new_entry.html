@@ -9,29 +9,33 @@
 
 <form method="post">
                 <span style="float:right;">
+                    <br>
+                    <br>
             <h5>Important Reminders</h5>
-                Team Name(s) must be independent of each other. Entrants are allowed to submit up to three teams.<br/>
+                Entrants are allowed to submit up to three teams. Team Name(s) must be independent of each other.<br/>
                 </br>
             <h5>Cost and Payout</h5>
-                There is an entry fee of $30 per team. In terms of payout, the first-place entrant will take home 80 <br>
-                percent of the pot and second place entrant 20 percent.  First and second places will be determined by <br>
-                the top team aggregate money winner and the second-place team aggregate money winner. <br>
+                There is an entry fee of $30 per team. In terms of payout, there will be first, second, and third place <br>
+                winners who will take home 70%, 20%, and 10% of the pot, respectively. Winners will be determined by the  <br>
+                highest aggregate tournament dollars. <br>
                 <br>
-                We will use Venmo: username Greg Ferraro (Greg-Ferraro-1), which has a Masters logo as the Venmo profile
+                <h5>Tie Breaker</h5>
+                Please indicate the total number of strokes under par you think your team will finish with at the conclusion <br>
+                of the tournament. In the case of a tie between entrants, this number will determine the winner of the pool. <br>
+                <br>
+                <h5>Payment</h5>
+                We will use Venmo: username Greg Ferraro (Greg-Ferraro-1), which has a Masters logo as the Venmo profile.
                 <br>You may also send a check to:
                 <br>Greg Ferraro
                 <br>c/o The Ferraro Group
                 <br>165 W. Liberty Street, Suite 210
                 <br>Reno, NV 89501
             <br> <br>
-            <h5>Tie Breaker</h5>
-                Please indicate the total number of strokes under par you think your team will finish with at the conclusion <br>
-                of the tournament. In the case of a tie between entrants, this number this selection will determine the <br>
-                winner of the pool.
             </span>
 
     <dl>
         {{ render_field(form.entry_email) }}
+        {{ render_field(form.entrant_full_name) }}
         {{ render_field(form.team_name) }}
         {{ render_field(form.golfer_1) }}
         {{ render_field(form.golfer_2) }}
@@ -45,7 +49,25 @@
 </p></form>
 
 
+    <div id="footer">Website created by Darren and Grant Thomas
+    </div>
 
+
+
+<style>
+       #footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   color: gray;
+   text-align: center;
+}
+    body {
+    background: lightgreen !important;
+}
+
+</style>
 
 </doctype>
 {% endblock %}

@@ -7,26 +7,21 @@
     <br>
     <br>
     <br>
-
-        <img style="float: right;" alt="" src={{ url_for('static',filename='masters2.png') }} width=750 height=500>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+        <!--<img style="float: right;" alt="" src={{ url_for('static',filename='masters2.png') }} width=750 height=500>-->
 
     </img>
-
-
 <!--<h1>A tradition unlike any other...</h1>-->
 
-    <br>
-
   <a href="{{ url_for('.new_entry') }}"
-     style="font-size:30px">
-    Create Tournament Entry
+     style="font-size:65px; color:gold;">
+    Click Here To Enter Team(s)
   </a>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
 
 
 
@@ -42,14 +37,20 @@
 
 
 {% from "_formhelpers.html" import render_field %}
-
 <form method="post">
   <dl>
-    {{ render_field(form.select) }}
+
     <p>
+        <br><br><br><br><br>
+        <!--{{ render_field(form.select) }}-->
+        <a
+        style='font-weight:bold;'>
+        Enter masters2020 below and click search to view all entries.<br>
+            To view only your own entries, enter your email.
+        </a>
     {{ render_field(form.search) }}
   </p></dl>
-    <br>
+
   <p><input type="submit" value="Search">
 </p>
 
@@ -60,28 +61,28 @@
 
 
 
-    <div id="footer">Website created by Darren and Grant Thomas
-    </div>
+    <!--<div id="footer">Website created by Darren and Grant Thomas-->
+    <!--</div>-->
 
 
 
 </doctype>
 
     <style>
-   #footer {
-   position: fixed;
-   left: 0;
-   bottom: 0;
-   width: 100%;
-   color: gray;
-   text-align: center;
-}
-    <!--body {-->
-    <!--background-image: url(static/masters2.png);-->
-      <!--background-position: center;-->
-      <!--background-repeat: no-repeat;-->
-      <!--background-size: cover;-->
+   <!--#footer {-->
+   <!--position: fixed;-->
+   <!--left: 0;-->
+   <!--bottom: 0;-->
+   <!--width: 100%;-->
+   <!--color: white;-->
+   <!--text-align: center;-->
 <!--}-->
+    body {
+    background-image: url(static/faded_out2.png);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+}
     </style>
 
 </body>
