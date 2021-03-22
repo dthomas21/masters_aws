@@ -1,12 +1,13 @@
 from flask import Flask, flash, render_template, request, redirect, session, url_for
 from application.models import Entry, Golfer
-from application.forms import UserSearchForm, EntryForm
+from application.forms import UserSearchForm, EntryForm, LeaderboardForm
 from application import db
 from application import application
 from config import USERNAME, PASSWORD
 # from db_setup import init_db, db
 from application.tables import Results, UserResults
 from sqlalchemy import or_
+import pandas as pd
 
 
 @application.route('/', methods=['GET', 'POST'])
@@ -38,6 +39,12 @@ def logout():
     session.pop('logged_in', None)
     flash('Logged Out')
     return redirect(url_for('index'))
+
+@application.route('/leaderboard')
+def get_leaderboard():
+    df = pd.read_csv('dump.csv', sep='\t')
+    # print(df)
+    return render_template('leaderboard.html', tables=[df.to_html(classes='data')], titles=[df.columns.values])
 
 
 @application.route('/results')
