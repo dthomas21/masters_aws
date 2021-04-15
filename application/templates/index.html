@@ -17,12 +17,15 @@
     </img>
 <!--<h1>A tradition unlike any other...</h1>-->
 
-  <a href="{{ url_for('.new_entry') }}"
+  <!--<a href="{{ url_for('.new_entry') }}"-->
+     <!--style="font-size:65px; color:gold;">-->
+    <!--Click Here To Enter Team(s)-->
+  <!--</a>-->
+
+  <a href="{{ url_for('.get_leaderboard') }}"
      style="font-size:65px; color:gold;">
-    Click Here To Enter Team(s)
+    Unofficial Leaderboard
   </a>
-
-
 
 
 <!--{% with messages = get_flashed_messages() %}-->
@@ -45,8 +48,8 @@
         <!--{{ render_field(form.select) }}-->
         <a
         style='font-weight:bold;'>
-        Enter masters2020 below and click search to view all entries.<br>
-            To view only your own entries, enter your email.
+        <!--Enter masters2020 below and click search to view all entries.<br>-->
+            To view your own entries, enter your email below
         </a>
     {{ render_field(form.search) }}
   </p></dl>
@@ -63,6 +66,9 @@
 
     <!--<div id="footer">Website created by Darren and Grant Thomas-->
     <!--</div>-->
+
+
+
 
 
 

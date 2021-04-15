@@ -8,6 +8,8 @@ from config import USERNAME, PASSWORD
 from application.tables import Results, UserResults
 from sqlalchemy import or_
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 
 
 @application.route('/', methods=['GET', 'POST'])
@@ -42,8 +44,76 @@ def logout():
 
 @application.route('/leaderboard')
 def get_leaderboard():
-    df = pd.read_csv('dump.csv', sep='\t')
-    # print(df)
+    # read in manual entries
+    df = pd.read_csv('static/dump-2021.csv', sep='\t')
+
+    # scrape
+    url = 'https://www.augusta.com/masters/leaderboard'
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    results = soup.find(id="LargeLeaderboard")
+    job_elems = results.find_all('tr')
+
+    # loop to scrape
+    scores = []
+    for i in range(3, len(job_elems)):
+        name = job_elems[i].find('a').text.strip()
+        if len(name.split()) > 2:
+            name = f'{name.split()[2]}, {name.split()[0]} {name.split()[1]}'
+        elif job_elems[i].find('a').text.strip() == 'Matthew Fitzpatrick':
+            name = 'Fitzpatrick, Matt'
+        else:
+            name = f'{name.split()[1]}, {name.split()[0]}'
+
+        if job_elems[i].find('td', class_='center score').text == 'E':
+            score = 0
+        else:
+            try:
+                score = int(job_elems[i].find('td', class_='center score').text)
+            except:
+                score = None
+
+        try:
+            standing = int(job_elems[i].find('td').text.replace('T', ''))
+        except:
+            standing = None
+
+        scores.append([name, score, standing])
+
+    live_results = pd.DataFrame(scores, columns=['golfer', 'score', 'standing'])
+
+    # combine
+    df['golfer_1_score'] = ''
+    df['golfer_2_score'] = ''
+    df['golfer_3_score'] = ''
+    df['golfer_4_score'] = ''
+
+    for i in range(len(df)):
+        df.golfer_1_score[i] = live_results.loc[live_results.golfer == df.golfer_1[i]]['score'].values[0]
+        df.golfer_2_score[i] = live_results.loc[live_results.golfer == df.golfer_2[i]]['score'].values[0]
+        df.golfer_3_score[i] = live_results.loc[live_results.golfer == df.golfer_3[i]]['score'].values[0]
+        df.golfer_4_score[i] = live_results.loc[live_results.golfer == df.golfer_4[i]]['score'].values[0]
+    df['total_team_score'] = df.golfer_1_score + df.golfer_2_score + df.golfer_3_score + df.golfer_4_score
+
+    df = df.drop(columns=['id', 'entry_email_id', 'has_paid'])
+    df['tie_breaker'] = df['tie_breaker'].apply(lambda x: abs(x)*-1)
+
+
+
+    df = df.sort_values(by='total_team_score').reset_index(drop=True)
+    df.index = df.total_team_score.rank(method='dense')
+    df.index = df.index.map(int)
+    df.index.name = None
+
+    df = df.rename(columns={"entrant_full_name": "Participant", "team_name": "Team Name",
+                        "golfer_1": "Golfer 1", "golfer_2": "Golfer 2", "golfer_3": "Golfer 3", "golfer_4": "Golfer 4",
+                        "golfer_1_score": "Golfer 1 Score", "golfer_2_score": "Golfer 2 Score",
+                        "golfer_3_score": "Golfer 3 Score", "golfer_4_score": "Golfer 4 Score",
+                        "tie_breaker": "Tie Breaker", "total_team_score": "Total"})
+
+
+    flash('This online leaderboard (unofficial) displays estimated rankings based on a team’s total strokes under par.')
+    flash('REMINDER: First, second and third places will be determined by the top three team aggregate tournament money winners upon the conclusion of the tournament.')
     return render_template('leaderboard.html', tables=[df.to_html(classes='data')], titles=[df.columns.values])
 
 
@@ -54,12 +124,12 @@ def search_results(search):
 
     if search_string:
         allow_edit = False
-        if search_string == 'admin7':
+        if search_string == 'admin8':
             qry = db.session.query(Entry)
             results = qry.all()
             allow_edit = True
 
-        elif search_string == 'masters2020':
+        elif search_string == 'greenjacket8':
             qry = db.session.query(Entry)
             results = qry.all()
 
@@ -94,6 +164,7 @@ def search_results(search):
             table = UserResults(results)
             table.border = True
             return render_template('results.html', table=table)
+
 
 
 @application.route('/new_entry', methods=['GET', 'POST'])
